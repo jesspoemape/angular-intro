@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<!--what des my app have control over on the page? it is defined here with ng-app-->
+<body ng-app='myApp'>
+    <!--This div is controlled by the pancake controller. Another div with another controller would have data controlled by the different controller.-->
+    <div ng-controller='pancakeCtrl'> 
+        <!--You don't have to say $scope because it knows to reference the pancakeCtrl scope-->
+        {{ name }} <br/>
+        <!--two way data binding-->
+        <input type="text" ng-model='name'>
+
+        <div>
+            <h4>New Pancake</h4>
+            <!--you can bind to a property of an object, too, using ng-model-->
+            Background: <input type="text" ng-model='newPancake.background'>
+            <br/>
+            Width: <input type="text" ng-model='newPancake.width'>
+            <br/>
+            Height: <input type="text" ng-model='newPancake.height'>
+            <br/>
+
+            <!--this runs a snippet of JS when the button gets clicked-->
+            <button ng-click='addPancake()'>Add Pancake</button>
+            {{newPancake}}
+        </div>
+
+        <!--this button hides the filters div by setting the scope variable 'showFilters' to essentially toggle show on click-->
+
+        <button ng-hide='showFilters' ng-click="showFilters = true">Show Filters</button>
+        <button ng-show='showFilters' ng-click="showFilters = false">Hide Filters</button>
+        <!-- ng-if allows you to remove something from the page if a condition is not met. 
+        Show and hide still loads things into the html, but they are not rendered into the DOM.
+        this is useful if a status is not likely to change very often. For example, an admin and a user wills see different things, 
+        but the user will probably never see the admin stuff. In this case, ng-ig is great because you don't have to load it.
+
+        Bottomline: 
+        A toggle should be a show or hide. 
+        Long term should be ng-if
+        -->
+        <div ng-if='showFilters'>
+            the difference between show and if
+        </div>
+        <!--these filters are defined and adds to the scope-->
+        <div ng-show="showFilters">
+            color filter: <input type="text" ng-model='filterObj.background'>
+            <br/>
+            height filter: <input type="text" ng-model='filterObj.height'>
+            <br/>
+            width filter: <input type="text" ng-model='filterObj.width'>
+            <br/>
+        </div>
+
+        <!--ng-repeat basically loops through an array (pancakes is an array of objects in the controller)-->
+        <!--the filter pipes in a filter to the repeat. here, it takes the filterObj which has different filter types (see above)-->
+        <div class='pancake' ng-repeat="pancake in pancakes | filter: filterObj"  ng-style='pancake'>
+            {{pancake.background}}
+        </div>  
+    </div>
+    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js'></script>
+    <script src='app/app.js'></script>
+</body>
+</html>
